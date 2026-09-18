@@ -54,8 +54,9 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # ── Paths and Config ──────────────────────────────────────────────
-DATA_FILE = r"c:\Users\DELL\Downloads\ANN\covtype.data.gz"
-OUTPUT_DIR = r"c:\Users\DELL\Downloads\ANN\protocol_outputs"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "covtype.data.gz")
+OUTPUT_DIR = os.path.join(BASE_DIR, "protocol_outputs")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 RANDOM_SEED = 42

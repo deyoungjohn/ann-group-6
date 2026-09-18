@@ -29,7 +29,7 @@ from docx.oxml import parse_xml
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True, errors="replace")
 
 # ── Paths ──────────────────────────────────────────────────────────
-BASE_DIR = r"c:\Users\DELL\Downloads\ANN"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EXP_DIR = os.path.join(BASE_DIR, "experiment_results")
 STAT_DIR = os.path.join(BASE_DIR, "statistical_outputs")
 FIG_DIR = os.path.join(BASE_DIR, "report_figures")

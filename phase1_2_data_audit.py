@@ -18,8 +18,9 @@ from datetime import datetime
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 # ── Configuration ──────────────────────────────────────────────────
-DATA_FILE = r"c:\Users\DELL\Downloads\ANN\covtype.data.gz"
-OUTPUT_DIR = r"c:\Users\DELL\Downloads\ANN\audit_outputs"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "covtype.data.gz")
+OUTPUT_DIR = os.path.join(BASE_DIR, "audit_outputs")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ── Column names (from covtype.info) ──────────────────────────────

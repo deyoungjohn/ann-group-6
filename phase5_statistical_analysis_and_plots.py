@@ -34,12 +34,13 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_bufferin
 warnings.filterwarnings("ignore")
 
 # ── Paths and Config ──────────────────────────────────────────────
-RESULTS_DIR = r"c:\Users\DELL\Downloads\ANN\experiment_results"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_DIR = os.path.join(BASE_DIR, "experiment_results")
 RAW_RESULTS_FILE = os.path.join(RESULTS_DIR, "raw_fold_results.csv")
 CONFUSION_FILE = os.path.join(RESULTS_DIR, "confusion_matrices.json")
 
-OUTPUT_DIR = r"c:\Users\DELL\Downloads\ANN\statistical_outputs"
-PLOTS_DIR = r"c:\Users\DELL\Downloads\ANN\report_figures"
+OUTPUT_DIR = os.path.join(BASE_DIR, "statistical_outputs")
+PLOTS_DIR = os.path.join(BASE_DIR, "report_figures")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(PLOTS_DIR, exist_ok=True)
 

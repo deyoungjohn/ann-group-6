@@ -18,7 +18,7 @@ from scipy.stats import friedmanchisquare, wilcoxon, norm
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True, errors="replace")
 
-BASE_DIR = r"c:\Users\DELL\Downloads\ANN"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 AUDIT_DIR = os.path.join(BASE_DIR, "audit_outputs")
 PROTO_DIR = os.path.join(BASE_DIR, "protocol_outputs")
 EXP_DIR = os.path.join(BASE_DIR, "experiment_results")

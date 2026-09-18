@@ -58,9 +58,10 @@ from sklearn.metrics import (
 )
 
 # ── Paths and Config ──────────────────────────────────────────────
-DATA_FILE = r"c:\Users\DELL\Downloads\ANN\covtype.data.gz"
-FROZEN_PARAMS_FILE = r"c:\Users\DELL\Downloads\ANN\protocol_outputs\appendix_c_frozen_hyperparameters.json"
-RESULTS_DIR = r"c:\Users\DELL\Downloads\ANN\experiment_results"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "covtype.data.gz")
+FROZEN_PARAMS_FILE = os.path.join(BASE_DIR, "protocol_outputs", "appendix_c_frozen_hyperparameters.json")
+RESULTS_DIR = os.path.join(BASE_DIR, "experiment_results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 RANDOM_SEED = 42

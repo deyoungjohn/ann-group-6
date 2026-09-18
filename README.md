@@ -1,4 +1,4 @@
-# Forest Cover Type (Problem P6) — Empirical Machine Learning Benchmark
+# Forest Cover Type — Empirical Machine Learning Benchmark
 
 **Dataset**: UCI Forest Cover Type (#31) · **DOI**: `10.24432/C50K5N`  
 **Anchor Paper**: Blackard, J. A., & Dean, D. J. (1999). *Computers and Electronics in Agriculture*, 24(3), 131–151.
@@ -7,7 +7,7 @@
 
 ## 1. Quick Start: Full Reproduction in One Command
 
-To reproduce all audit findings, hyperparameter tuning, 15-fold outer cross-validation, statistical significance tests, figures, and academic report (`.docx` and `.pdf`) from the raw dataset (`covtype.data.gz`):
+To reproduce all audit findings, hyperparameter tuning, 15-fold outer cross-validation, statistical significance tests, and figures from the raw dataset (`covtype.data.gz`):
 
 ```bash
 # 1. Install pinned dependencies
@@ -30,9 +30,6 @@ python verify_reproducibility.py
 c:\Users\DELL\Downloads\ANN\
 ├── covtype.data.gz                     # Raw dataset from UCI (581,012 rows × 55 columns)
 ├── covtype.info                        # UCI dataset metadata and documentation
-│
-├── P6_Forest_CoverType_Report.docx      # Academic report in Word format (Chapter 4 template)
-├── P6_Forest_CoverType_Report.pdf       # Academic report in PDF format (generated via Word COM)
 │
 ├── phase1_2_data_audit.py              # Phase 1 & 2: Anchor paper analysis & data audit
 ├── phase3_protocol_and_tuning.py       # Phase 3: Pipeline construction & inner CV tuning
@@ -80,8 +77,8 @@ c:\Users\DELL\Downloads\ANN\
 
 ## 3. Pinned Environment & Hardware Specifications
 
-- **Operating System**: Windows 11 / Windows 10 build 26200
-- **CPU**: Intel Core i7-10750H (6 physical cores, 16 logical threads)
+- **Operating System**: Windows 11
+- **CPU**: Intel Core i9-10885H
 - **RAM**: 32.0 GB
 - **Python Version**: 3.11.6
 - **Key Dependencies**:
@@ -99,9 +96,9 @@ c:\Users\DELL\Downloads\ANN\
 
 ## 4. Experimental Design Summary
 
-- **Subsampling**: Documented stratified subsample of $N = 50,000$ from the full 581,012 dataset (`random_state=42`), preserving class balance down to 0.00% deviation.
-- **Validation Protocol**: Stratified 5-Fold cross-validation repeated 3 times ($N = 15$ paired outer folds).
+- **Subsampling**: Documented stratified subsample of $N = 50,000$ from the full 581,012 dataset, and preserved class balance down to 0.00% deviation.
+- **Validation Protocol**: Stratified 5-Fold cross-validation repeated 3 times.
 - **Tuning Protocol**: Inner Stratified 3-Fold CV on training partitions using `RandomizedSearchCV` with an identical budget of exactly **30 evaluations** per algorithm, optimizing `f1_macro`.
-- **Data Leakage Safeguard**: `ColumnTransformer` embedded inside the `Pipeline`. Continuous features (columns 0–9) are standardized using `StandardScaler` fitted **only on the training fold**. Binary indicator features (columns 10–53) are passed through unscaled. Test folds are evaluated exactly once at the end.
-- **Evaluation Criteria**: Primary: unweighted Macro-Averaged F1 (`f1_macro`) and per-class recall. Secondary: overall accuracy, Cohen's kappa ($\kappa$), training runtime (seconds), and prediction latency (milliseconds per 1,000 samples).
-- **Statistical Rigor**: Omnibus Friedman test followed by post-hoc pairwise Wilcoxon signed-rank tests with Holm–Bonferroni step-down correction and non-parametric effect sizes $r = Z / \sqrt{N}$ ($N=15$).
+- **Data Leakage Safeguard**: `ColumnTransformer` embedded inside the `Pipeline`. Continuous features are standardized using `StandardScaler` fitted **only on the training fold**. Binary indicator features are passed through unscaled. Test folds are evaluated exactly once at the end.
+- **Evaluation Criteria**: Primary: unweighted Macro-Averaged F1 and per-class recall. Secondary: overall accuracy, Cohen's kappa ($\kappa$), training runtime, and prediction latency.
+- **Statistical Rigor**: Omnibus Friedman test followed by post-hoc pairwise Wilcoxon signed-rank tests with Holm–Bonferroni step-down correction and non-parametric effect sizes $r = Z / \sqrt{N}$.
