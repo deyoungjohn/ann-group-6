@@ -1,0 +1,148 @@
+{
+    "friedman_macro_f1": {
+        "statistic": 71.41904761904766,
+        "p_value": 5.190420834226165e-14,
+        "mean_ranks": {
+            "RandomForest": 1.8666666666666667,
+            "LightGBM": 1.2666666666666666,
+            "MLP": 2.933333333333333,
+            "DecisionTree": 3.933333333333333,
+            "LogisticRegression": 5.0,
+            "MajorityClass_ZeroRule": 6.0
+        }
+    },
+    "friedman_accuracy": {
+        "statistic": 71.80000000000001,
+        "p_value": 4.3236447946188916e-14,
+        "mean_ranks": {
+            "RandomForest": 1.9333333333333333,
+            "LightGBM": 1.2,
+            "MLP": 2.933333333333333,
+            "DecisionTree": 3.933333333333333,
+            "LogisticRegression": 5.0,
+            "MajorityClass_ZeroRule": 6.0
+        }
+    },
+    "pairwise_wilcoxon": [
+        {
+            "Pair": "RandomForest vs. LightGBM",
+            "Algorithm_1": "RandomForest",
+            "Algorithm_2": "LightGBM",
+            "Description": "Top ensemble comparison (Bagging vs Boosting)",
+            "Mean_Diff": 0.0059756666666666534,
+            "Std_Diff": 0.05909191359068959,
+            "Statistic_W": 21.0,
+            "p_value_raw": 0.02557373046875,
+            "Z_score": 2.2326242968424026,
+            "Effect_Size_r": 0.5764611146672446,
+            "p_value_holm": 0.02557373046875,
+            "Significant": true,
+            "Interpretation": "Statistically significant (RandomForest superior, p_holm = 2.5574e-02, large practical effect, r = 0.58)."
+        },
+        {
+            "Pair": "RandomForest vs. MLP",
+            "Algorithm_1": "RandomForest",
+            "Algorithm_2": "MLP",
+            "Description": "Top ensemble vs Neural anchor",
+            "Mean_Diff": 0.05395919999999999,
+            "Std_Diff": 0.010389140004281946,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        },
+        {
+            "Pair": "LightGBM vs. MLP",
+            "Algorithm_1": "LightGBM",
+            "Algorithm_2": "MLP",
+            "Description": "Gradient boosting vs Neural anchor",
+            "Mean_Diff": 0.04798353333333334,
+            "Std_Diff": 0.059515029156948084,
+            "Statistic_W": 15.0,
+            "p_value_raw": 0.00836181640625,
+            "Z_score": 2.637100054045068,
+            "Effect_Size_r": 0.6808963061066152,
+            "p_value_holm": 0.0167236328125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (LightGBM superior, p_holm = 1.6724e-02, large practical effect, r = 0.68)."
+        },
+        {
+            "Pair": "RandomForest vs. DecisionTree",
+            "Algorithm_1": "RandomForest",
+            "Algorithm_2": "DecisionTree",
+            "Description": "Ensemble gain over single tree",
+            "Mean_Diff": 0.09061959999999998,
+            "Std_Diff": 0.010331361352696957,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        },
+        {
+            "Pair": "MLP vs. DecisionTree",
+            "Algorithm_1": "MLP",
+            "Algorithm_2": "DecisionTree",
+            "Description": "Neural network vs Single decision tree",
+            "Mean_Diff": 0.0366604,
+            "Std_Diff": 0.012296167380820051,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (MLP superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        },
+        {
+            "Pair": "DecisionTree vs. LogisticRegression",
+            "Algorithm_1": "DecisionTree",
+            "Algorithm_2": "LogisticRegression",
+            "Description": "Non-linear greedy tree vs Linear model",
+            "Mean_Diff": 0.2006607333333333,
+            "Std_Diff": 0.013509809607766331,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (DecisionTree superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        },
+        {
+            "Pair": "LogisticRegression vs. MajorityClass_ZeroRule",
+            "Algorithm_1": "LogisticRegression",
+            "Algorithm_2": "MajorityClass_ZeroRule",
+            "Description": "Linear model vs Trivial baseline",
+            "Mean_Diff": 0.4393984,
+            "Std_Diff": 0.011551076732742895,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (LogisticRegression superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        },
+        {
+            "Pair": "RandomForest vs. LogisticRegression",
+            "Algorithm_1": "RandomForest",
+            "Algorithm_2": "LogisticRegression",
+            "Description": "Global best vs Linear model",
+            "Mean_Diff": 0.29128033333333325,
+            "Std_Diff": 0.012007125525326725,
+            "Statistic_W": 0.0,
+            "p_value_raw": 6.103515625e-05,
+            "Z_score": 4.008772594168584,
+            "Effect_Size_r": 1.0350606330631753,
+            "p_value_holm": 0.00048828125,
+            "Significant": true,
+            "Interpretation": "Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+Comparison Pair,Description,Mean Difference (A1 - A2),Wilcoxon W,Raw p-value,Holm-Adjusted p,Effect Size (r),Interpretation
+RandomForest vs. LightGBM,Top ensemble comparison (Bagging vs Boosting),+0.0060 ± 0.0591,21.0,0.0256,0.0256,0.576,"Statistically significant (RandomForest superior, p_holm = 2.5574e-02, large practical effect, r = 0.58)."
+RandomForest vs. MLP,Top ensemble vs Neural anchor,+0.0540 ± 0.0104,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+LightGBM vs. MLP,Gradient boosting vs Neural anchor,+0.0480 ± 0.0595,15.0,0.0084,0.0167,0.681,"Statistically significant (LightGBM superior, p_holm = 1.6724e-02, large practical effect, r = 0.68)."
+RandomForest vs. DecisionTree,Ensemble gain over single tree,+0.0906 ± 0.0103,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+MLP vs. DecisionTree,Neural network vs Single decision tree,+0.0367 ± 0.0123,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (MLP superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+DecisionTree vs. LogisticRegression,Non-linear greedy tree vs Linear model,+0.2007 ± 0.0135,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (DecisionTree superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+LogisticRegression vs. MajorityClass_ZeroRule,Linear model vs Trivial baseline,+0.4394 ± 0.0116,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (LogisticRegression superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."
+RandomForest vs. LogisticRegression,Global best vs Linear model,+0.2913 ± 0.0120,0.0,6.1035e-05,4.8828e-04,1.035,"Statistically significant (RandomForest superior, p_holm = 4.8828e-04, large practical effect, r = 1.04)."

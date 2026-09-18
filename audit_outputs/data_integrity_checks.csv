@@ -1,0 +1,12 @@
+,value
+wilderness_rows_exactly_one,581012
+wilderness_rows_zero,0
+wilderness_rows_multiple,0
+soil_rows_exactly_one,581012
+soil_rows_zero,0
+soil_rows_multiple,0
+unused_soil_types,0
+total_rows,581012
+total_columns,55
+total_missing_cells,0
+total_duplicate_rows,0

@@ -1,0 +1,40 @@
+{
+    "LogisticRegression": {
+        "C": 14.528246637516036,
+        "max_iter": 300,
+        "penalty": "l2",
+        "solver": "lbfgs"
+    },
+    "DecisionTree": {
+        "min_samples_split": 5,
+        "min_samples_leaf": 1,
+        "max_depth": 30,
+        "criterion": "gini"
+    },
+    "RandomForest": {
+        "n_estimators": 150,
+        "min_samples_split": 2,
+        "min_samples_leaf": 1,
+        "max_features": 0.5,
+        "max_depth": null
+    },
+    "LightGBM": {
+        "colsample_bytree": 1.0,
+        "learning_rate": 0.09726568066784747,
+        "max_depth": -1,
+        "n_estimators": 150,
+        "num_leaves": 127,
+        "subsample": 0.8
+    },
+    "MLP": {
+        "activation": "tanh",
+        "alpha": 0.02388555817868859,
+        "early_stopping": true,
+        "hidden_layer_sizes": [
+            120,
+            60
+        ],
+        "learning_rate_init": 0.003488976654890368,
+        "max_iter": 60
+    }
+}

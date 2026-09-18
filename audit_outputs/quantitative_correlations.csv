@@ -1,0 +1,11 @@
+,Elevation,Aspect,Slope,Horizontal_Distance_To_Hydrology,Vertical_Distance_To_Hydrology,Horizontal_Distance_To_Roadways,Hillshade_9am,Hillshade_Noon,Hillshade_3pm,Horizontal_Distance_To_Fire_Points
+Elevation,1.0,0.0157,-0.2427,0.3062,0.0933,0.3656,0.1122,0.2059,0.0591,0.148
+Aspect,0.0157,1.0,0.0787,0.0174,0.0703,0.0251,-0.5793,0.3361,0.6469,-0.1092
+Slope,-0.2427,0.0787,1.0,-0.0106,0.275,-0.2159,-0.3272,-0.5269,-0.1759,-0.1857
+Horizontal_Distance_To_Hydrology,0.3062,0.0174,-0.0106,1.0,0.6062,0.072,-0.0271,0.0468,0.0523,0.0519
+Vertical_Distance_To_Hydrology,0.0933,0.0703,0.275,0.6062,1.0,-0.0464,-0.1663,-0.111,0.0349,-0.0699
+Horizontal_Distance_To_Roadways,0.3656,0.0251,-0.2159,0.072,-0.0464,1.0,0.0343,0.1895,0.1061,0.3316
+Hillshade_9am,0.1122,-0.5793,-0.3272,-0.0271,-0.1663,0.0343,1.0,0.01,-0.7803,0.1327
+Hillshade_Noon,0.2059,0.3361,-0.5269,0.0468,-0.111,0.1895,0.01,1.0,0.5943,0.0573
+Hillshade_3pm,0.0591,0.6469,-0.1759,0.0523,0.0349,0.1061,-0.7803,0.5943,1.0,-0.048
+Horizontal_Distance_To_Fire_Points,0.148,-0.1092,-0.1857,0.0519,-0.0699,0.3316,0.1327,0.0573,-0.048,1.0
