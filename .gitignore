@@ -1,4 +1,6 @@
 /*.pdf
 /*.docx
 /*.txt
+!/requirements.txt
 *.zip
+report_figures/
