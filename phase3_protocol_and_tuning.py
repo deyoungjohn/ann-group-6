@@ -48,8 +48,8 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-# Fix Windows console encoding
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+# Fix Windows console encoding (line_buffering=True prevents silent buffering in WSL/pipes)
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True, errors="replace")
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -190,151 +190,162 @@ base_models = {
 print(f"\n{'─' * 75}")
 print("4. FREEZING OPTIMAL HYPERPARAMETERS VIA INNER CV (CHECKPOINT 2)")
 print(f"{'─' * 75}")
-print(f"Tuning on inner Stratified {N_INNER_SPLITS}-Fold CV using {N_TUNING_ITER} random evaluations per model...")
 
-inner_cv = StratifiedKFold(n_splits=N_INNER_SPLITS, shuffle=True, random_state=RANDOM_SEED)
+frozen_json_path = os.path.join(OUTPUT_DIR, "appendix_c_frozen_hyperparameters.json")
+table3_csv_path = os.path.join(OUTPUT_DIR, "table_3_tuning_protocol.csv")
+force_retune = "--force-retune" in sys.argv
 
-frozen_configs = {}
-table_3_rows = []
+if os.path.exists(frozen_json_path) and os.path.exists(table3_csv_path) and not force_retune:
+    print("  [INFO] Pre-computed frozen hyperparameters found:")
+    print(f"         {frozen_json_path}")
+    print("  [INFO] Using frozen hyperparameters from Checkpoint 2 (skipping ~1.5h inner CV search).")
+    print("         (To force a fresh re-search from scratch, run with: --force-retune)\n")
+    
+    with open(frozen_json_path, "r") as f:
+        frozen_configs = json.load(f)
+    table_3_df = pd.read_csv(table3_csv_path)
+    
+    for _, row in table_3_df.iterrows():
+        print(f"    • {row['Algorithm']:20s} Inner Macro-F1: {row['Inner CV Best Macro-F1']:.4f}")
+else:
+    print(f"Tuning on inner Stratified {N_INNER_SPLITS}-Fold CV using {N_TUNING_ITER} random evaluations per model...")
+    inner_cv = StratifiedKFold(n_splits=N_INNER_SPLITS, shuffle=True, random_state=RANDOM_SEED)
+    frozen_configs = {}
+    table_3_rows = []
 
-for name, model in base_models.items():
-    print(f"\n  Tuning {name} ({N_TUNING_ITER} iterations)...")
-    pipe = Pipeline([
-        ("preprocessor", preprocessor),
-        ("model", model),
-    ])
-    
-    search = RandomizedSearchCV(
-        estimator=pipe,
-        param_distributions=param_spaces[name],
-        n_iter=N_TUNING_ITER,
-        cv=inner_cv,
-        scoring="f1_macro",
-        random_state=RANDOM_SEED,
-        n_jobs=1,
-        verbose=1,
-        refit=True,
-    )
-    
-    t0 = time.time()
-    search.fit(X_sub, y_sub)
-    tuning_time = time.time() - t0
-    
-    best_params = {k.replace("model__", ""): v for k, v in search.best_params_.items()}
-    best_score = search.best_score_
-    
-    frozen_configs[name] = best_params
-    print(f"    Best Inner Macro-F1: {best_score:.4f} (Tuning time: {tuning_time:.1f}s)")
-    print(f"    Best Parameters    : {best_params}")
-    
-    # Format hyperparameter space description for Table 3
-    space_desc = ", ".join([f"{k.replace('model__','')}: {v}" for k, v in param_spaces[name].items()])
-    table_3_rows.append({
-        "Algorithm": name,
-        "Family": (
-            "Linear/Probabilistic" if name == "LogisticRegression" else
-            "Tree/Rule-based" if name == "DecisionTree" else
-            "Ensemble" if name in ["RandomForest", "LightGBM"] else "Neural/Kernel"
-        ),
-        "Hyperparameter Space": space_desc,
-        "Search Method": f"RandomizedSearchCV (seed={RANDOM_SEED})",
-        "Configurations Evaluated": N_TUNING_ITER,
-        "Inner Validation": f"Stratified {N_INNER_SPLITS}-Fold CV",
-        "Selection Metric": "Macro-F1 (f1_macro)",
-        "Inner CV Best Macro-F1": round(best_score, 4),
-        "Tuning Runtime (s)": round(tuning_time, 2),
-    })
+    for name, model in base_models.items():
+        print(f"\n  Tuning {name} ({N_TUNING_ITER} iterations)...", flush=True)
+        pipe = Pipeline([
+            ("preprocessor", preprocessor),
+            ("model", model),
+        ])
+        
+        search = RandomizedSearchCV(
+            estimator=pipe,
+            param_distributions=param_spaces[name],
+            n_iter=N_TUNING_ITER,
+            cv=inner_cv,
+            scoring="f1_macro",
+            random_state=RANDOM_SEED,
+            n_jobs=1,
+            verbose=1,
+            refit=True,
+        )
+        
+        t0 = time.time()
+        search.fit(X_sub, y_sub)
+        tuning_time = time.time() - t0
+        
+        best_params = {k.replace("model__", ""): v for k, v in search.best_params_.items()}
+        best_score = search.best_score_
+        
+        frozen_configs[name] = best_params
+        print(f"    Best Inner Macro-F1: {best_score:.4f} (Tuning time: {tuning_time:.1f}s)", flush=True)
+        print(f"    Best Parameters    : {best_params}", flush=True)
+        
+        space_desc = ", ".join([f"{k.replace('model__','')}: {v}" for k, v in param_spaces[name].items()])
+        table_3_rows.append({
+            "Algorithm": name,
+            "Family": (
+                "Linear/Probabilistic" if name == "LogisticRegression" else
+                "Tree/Rule-based" if name == "DecisionTree" else
+                "Ensemble" if name in ["RandomForest", "LightGBM"] else "Neural/Kernel"
+            ),
+            "Hyperparameter Space": space_desc,
+            "Search Method": f"RandomizedSearchCV (seed={RANDOM_SEED})",
+            "Configurations Evaluated": N_TUNING_ITER,
+            "Inner Validation": f"Stratified {N_INNER_SPLITS}-Fold CV",
+            "Selection Metric": "Macro-F1 (f1_macro)",
+            "Inner CV Best Macro-F1": round(best_score, 4),
+            "Tuning Runtime (s)": round(tuning_time, 2),
+        })
 
-# Save Table 3
-table_3_df = pd.DataFrame(table_3_rows)
-table_3_df.to_csv(os.path.join(OUTPUT_DIR, "table_3_tuning_protocol.csv"), index=False)
-print(f"\n  ✓ table_3_tuning_protocol.csv saved.")
+    table_3_df = pd.DataFrame(table_3_rows)
+    table_3_df.to_csv(table3_csv_path, index=False)
+    print(f"\n  ✓ table_3_tuning_protocol.csv saved.", flush=True)
 
-# Save frozen configurations (Appendix C)
-with open(os.path.join(OUTPUT_DIR, "appendix_c_frozen_hyperparameters.json"), "w") as f:
-    json.dump(frozen_configs, f, indent=4, default=str)
-print(f"  ✓ appendix_c_frozen_hyperparameters.json saved.")
+    with open(frozen_json_path, "w") as f:
+        json.dump(frozen_configs, f, indent=4, default=str)
+    print(f"  ✓ appendix_c_frozen_hyperparameters.json saved.", flush=True)
 
 # ── 5. Run Baseline Models across 15 Outer Folds ───────────────────
 print(f"\n{'─' * 75}")
 print("5. EVALUATING BASELINE MODELS ON FULL 15-FOLD PROTOCOL (CHECKPOINT 2)")
 print(f"{'─' * 75}")
 
-outer_cv = RepeatedStratifiedKFold(
-    n_splits=N_OUTER_SPLITS,
-    n_repeats=N_OUTER_REPEATS,
-    random_state=RANDOM_SEED,
-)
+baseline_csv_path = os.path.join(OUTPUT_DIR, "baseline_fold_results.csv")
 
-# Two baselines:
-# Baseline A: Majority-Class Zero-Rule Classifier (trivial lower bound)
-# Baseline B: Logistic Regression with default / tuned parameters (linear baseline)
+if os.path.exists(baseline_csv_path) and not force_retune:
+    print(f"  [INFO] Pre-computed baseline fold results found: {baseline_csv_path}")
+    print("  [INFO] Loading cached 15-fold baseline records...\n")
+    baseline_df = pd.read_csv(baseline_csv_path)
+else:
+    outer_cv = RepeatedStratifiedKFold(
+        n_splits=N_OUTER_SPLITS,
+        n_repeats=N_OUTER_REPEATS,
+        random_state=RANDOM_SEED,
+    )
 
-baseline_results = []
+    baseline_results = []
+    print("Running 15 outer folds for Majority-Class and Logistic Regression baselines...", flush=True)
 
-print("Running 15 outer folds for Majority-Class and Logistic Regression baselines...")
+    lr_best_pipe = Pipeline([
+        ("preprocessor", preprocessor),
+        ("model", LogisticRegression(**frozen_configs["LogisticRegression"], random_state=RANDOM_SEED)),
+    ])
+    dummy_clf = DummyClassifier(strategy="most_frequent")
 
-lr_best_pipe = Pipeline([
-    ("preprocessor", preprocessor),
-    ("model", LogisticRegression(**frozen_configs["LogisticRegression"], random_state=RANDOM_SEED)),
-])
+    fold_idx = 0
+    for repeat in range(N_OUTER_REPEATS):
+        for split in range(N_OUTER_SPLITS):
+            fold_name = f"Rep{repeat+1}_Fold{split+1}"
+            
+            for current_idx, (train_idx, test_idx) in enumerate(outer_cv.split(X_sub, y_sub)):
+                if current_idx == fold_idx:
+                    break
+            
+            X_tr, y_tr = X_sub[train_idx], y_sub[train_idx]
+            X_te, y_te = X_sub[test_idx], y_sub[test_idx]
+            
+            t0 = time.time()
+            dummy_clf.fit(X_tr, y_tr)
+            t_fit_dummy = time.time() - t0
+            t0 = time.time()
+            y_pred_dummy = dummy_clf.predict(X_te)
+            t_pred_dummy = time.time() - t0
+            
+            baseline_results.append({
+                "fold": fold_name,
+                "algorithm": "MajorityClass_ZeroRule",
+                "macro_f1": f1_score(y_te, y_pred_dummy, average="macro", zero_division=0),
+                "accuracy": accuracy_score(y_te, y_pred_dummy),
+                "cohen_kappa": cohen_kappa_score(y_te, y_pred_dummy),
+                "fit_time_sec": t_fit_dummy,
+                "pred_time_sec": t_pred_dummy,
+            })
+            
+            t0 = time.time()
+            lr_best_pipe.fit(X_tr, y_tr)
+            t_fit_lr = time.time() - t0
+            t0 = time.time()
+            y_pred_lr = lr_best_pipe.predict(X_te)
+            t_pred_lr = time.time() - t0
+            
+            baseline_results.append({
+                "fold": fold_name,
+                "algorithm": "LogisticRegression_Baseline",
+                "macro_f1": f1_score(y_te, y_pred_lr, average="macro", zero_division=0),
+                "accuracy": accuracy_score(y_te, y_pred_lr),
+                "cohen_kappa": cohen_kappa_score(y_te, y_pred_lr),
+                "fit_time_sec": t_fit_lr,
+                "pred_time_sec": t_pred_lr,
+            })
+            
+            fold_idx += 1
 
-dummy_clf = DummyClassifier(strategy="most_frequent")
-
-fold_idx = 0
-for repeat in range(N_OUTER_REPEATS):
-    for split in range(N_OUTER_SPLITS):
-        fold_name = f"Rep{repeat+1}_Fold{split+1}"
-        
-        # Get train/test indices
-        for current_idx, (train_idx, test_idx) in enumerate(outer_cv.split(X_sub, y_sub)):
-            if current_idx == fold_idx:
-                break
-        
-        X_tr, y_tr = X_sub[train_idx], y_sub[train_idx]
-        X_te, y_te = X_sub[test_idx], y_sub[test_idx]
-        
-        # --- Evaluate Majority-Class Baseline ---
-        t0 = time.time()
-        dummy_clf.fit(X_tr, y_tr)
-        t_fit_dummy = time.time() - t0
-        t0 = time.time()
-        y_pred_dummy = dummy_clf.predict(X_te)
-        t_pred_dummy = time.time() - t0
-        
-        baseline_results.append({
-            "fold": fold_name,
-            "algorithm": "MajorityClass_ZeroRule",
-            "macro_f1": f1_score(y_te, y_pred_dummy, average="macro", zero_division=0),
-            "accuracy": accuracy_score(y_te, y_pred_dummy),
-            "cohen_kappa": cohen_kappa_score(y_te, y_pred_dummy),
-            "fit_time_sec": t_fit_dummy,
-            "pred_time_sec": t_pred_dummy,
-        })
-        
-        # --- Evaluate Logistic Regression Baseline ---
-        t0 = time.time()
-        lr_best_pipe.fit(X_tr, y_tr)
-        t_fit_lr = time.time() - t0
-        t0 = time.time()
-        y_pred_lr = lr_best_pipe.predict(X_te)
-        t_pred_lr = time.time() - t0
-        
-        baseline_results.append({
-            "fold": fold_name,
-            "algorithm": "LogisticRegression_Baseline",
-            "macro_f1": f1_score(y_te, y_pred_lr, average="macro", zero_division=0),
-            "accuracy": accuracy_score(y_te, y_pred_lr),
-            "cohen_kappa": cohen_kappa_score(y_te, y_pred_lr),
-            "fit_time_sec": t_fit_lr,
-            "pred_time_sec": t_pred_lr,
-        })
-        
-        fold_idx += 1
-
-baseline_df = pd.DataFrame(baseline_results)
-baseline_df.to_csv(os.path.join(OUTPUT_DIR, "baseline_fold_results.csv"), index=False)
-print(f"  ✓ baseline_fold_results.csv saved.")
+    baseline_df = pd.DataFrame(baseline_results)
+    baseline_df.to_csv(baseline_csv_path, index=False)
+    print(f"  ✓ baseline_fold_results.csv saved.", flush=True)
 
 # Baseline summary across 15 folds (Mean ± Std)
 print(f"\n{'─' * 75}")
@@ -350,7 +361,7 @@ for algo in baseline_df["algorithm"].unique():
         "Accuracy": f"{sub['accuracy'].mean():.4f} ± {sub['accuracy'].std():.4f}",
         "Cohen's Kappa": f"{sub['cohen_kappa'].mean():.4f} ± {sub['cohen_kappa'].std():.4f}",
         "Fit Time (s)": f"{sub['fit_time_sec'].mean():.3f} ± {sub['fit_time_sec'].std():.3f}",
-        "Pred Latency (ms/1k)": f"{(sub['pred_time_sec'].mean() / len(test_idx) * 1000 * 1000):.2f}",
+        "Pred Latency (ms/1k)": f"{(sub['pred_time_sec'].mean() / (SUBSAMPLE_SIZE / N_OUTER_SPLITS) * 1000 * 1000):.2f}",
     })
 
 baseline_summary_df = pd.DataFrame(summary_rows)

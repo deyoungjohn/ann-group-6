@@ -15,7 +15,7 @@ import io
 from datetime import datetime
 
 # Fix Windows console encoding
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', line_buffering=True, errors='replace')
 
 # ── Configuration ──────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
