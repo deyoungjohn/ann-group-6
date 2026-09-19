@@ -4,3 +4,4 @@
 !/requirements.txt
 *.zip
 report_figures/
+phase6_7_generate_report.py

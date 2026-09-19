@@ -7,11 +7,11 @@
 
 ## 1. Quick Start: Full Reproduction in One Command
 
-To reproduce all audit findings, hyperparameter tuning, 15-fold outer cross-validation, statistical significance tests, and figures from the raw dataset (`covtype.data.gz`):
+To reproduce all audit findings, hyperparameter tuning, 15-fold outer cross-validation, statistical significance tests, figures, and experiment summary guide from the raw dataset (`covtype.data.gz`):
 
 ```bash
 # 1. Install pinned dependencies
-pip install -r experiment_results/requirements.txt
+pip install -r requirements.txt
 
 # 2. Run the master replication pipeline
 python run_all.py
@@ -27,15 +27,16 @@ python verify_reproducibility.py
 ## 2. Directory Structure & Deliverable Manifest
 
 ```
-c:\Users\DELL\Downloads\ANN\
-├── covtype.data.gz                     # Raw dataset from UCI (581,012 rows × 55 columns)
+├── covtype.data.gz                     # Raw dataset from UCI (581,012 rows × 54 features)
 ├── covtype.info                        # UCI dataset metadata and documentation
+├── requirements.txt                    # Pinned library dependencies
 │
 ├── phase1_2_data_audit.py              # Phase 1 & 2: Anchor paper analysis & data audit
 ├── phase3_protocol_and_tuning.py       # Phase 3: Pipeline construction & inner CV tuning
 ├── phase4_full_experiment_matrix.py    # Phase 4: 15-fold outer CV matrix execution
 ├── phase5_statistical_analysis_and_plots.py # Phase 5: Friedman, Wilcoxon+Holm & figure generation
-├── verify_reproducibility.py           # Phase 8: Automated parity audit (76/76 checks passed)
+├── phase6_summary.py                   # Phase 6: Experiment summary & artifact guide generation
+├── verify_reproducibility.py           # Phase 7: Automated parity audit (71/71 checks passed)
 ├── run_all.py                          # Master one-command replication pipeline
 │
 ├── audit_outputs/                      # Phase 2 audit outputs

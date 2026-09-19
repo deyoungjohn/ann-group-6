@@ -36,8 +36,8 @@ SCRIPTS = [
     ("Phase 3: Protocol Freeze & Baselines", "phase3_protocol_and_tuning.py"),
     ("Phase 4: Full Experiment Matrix (15 outer folds)", "phase4_full_experiment_matrix.py"),
     ("Phase 5: Statistical Analysis & Figures", "phase5_statistical_analysis_and_plots.py"),
-    ("Phase 6 & 7: Report Generation (DOCX & PDF)", "phase6_7_generate_report.py"),
-    ("Phase 8: Verification & Parity Audit", "verify_reproducibility.py"),
+    ("Phase 6: Experiment Summary & Artifact Guide", "phase6_summary.py"),
+    ("Phase 7: Verification & Parity Audit", "verify_reproducibility.py"),
 ]
 
 def main():
@@ -81,7 +81,7 @@ def main():
         
     total_time = time.time() - t_global_start
     print("\n" + "=" * 80)
-    print(f"ALL PHASES COMPLETED SUCCESSFULLY IN {total_time / 60:.2f} MINUTES")
+    print("ALL PHASES COMPLETED SUCCESSFULLY")
     print("=" * 80)
 
 if __name__ == "__main__":
