@@ -211,7 +211,8 @@ for name, model in base_models.items():
         cv=inner_cv,
         scoring="f1_macro",
         random_state=RANDOM_SEED,
-        n_jobs=-1,
+        n_jobs=1,
+        verbose=1,
         refit=True,
     )
     

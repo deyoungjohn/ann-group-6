@@ -35,7 +35,6 @@ c:\Users\DELL\Downloads\ANN\
 ├── phase3_protocol_and_tuning.py       # Phase 3: Pipeline construction & inner CV tuning
 ├── phase4_full_experiment_matrix.py    # Phase 4: 15-fold outer CV matrix execution
 ├── phase5_statistical_analysis_and_plots.py # Phase 5: Friedman, Wilcoxon+Holm & figure generation
-├── phase6_7_generate_report.py         # Phase 6 & 7: Word & PDF report generation
 ├── verify_reproducibility.py           # Phase 8: Automated parity audit (76/76 checks passed)
 ├── run_all.py                          # Master one-command replication pipeline
 │
