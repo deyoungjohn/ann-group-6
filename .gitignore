@@ -3,5 +3,6 @@
 /*.txt
 !/requirements.txt
 *.zip
-report_figures/
+checkpoint.docx
+create_checkpoint_doc.py
 phase6_7_generate_report.py

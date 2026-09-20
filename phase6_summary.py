@@ -125,16 +125,10 @@ def main():
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(24)
-    run = p_title.add_run("Forest Cover Type Classification (Problem P6)\nExperiment Summary & Artifact Guide")
+    run = p_title.add_run("Forest Cover Type Classification \nExperiment Summary & Artifact Guide")
     run.font.size = Pt(18)
     run.bold = True
     run.font.color.rgb = RGBColor(0x1F, 0x4E, 0x79)
-
-    p_meta = doc.add_paragraph()
-    p_meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_meta = p_meta.add_run(f"Generated: {datetime.now().strftime('%d %B %Y')} | Dataset: UCI Covertype (#31)")
-    run_meta.font.size = Pt(10)
-    run_meta.italic = True
 
     # 1. Project Overview
     add_heading_styled(doc, "1. Project Overview and Experimental Setup", level=1)
@@ -325,7 +319,7 @@ def main():
     add_heading_styled(doc, "7. How to Reproduce and Verify", level=1)
     add_body_text(doc, 
         "To reproduce the entire experimental pipeline from the raw dataset, run: python run_all.py\n"
-        "To quickly verify numerical parity between raw fold records and summary tables, run: python verify_reproducibility.py\n"
+        "To quickly verify numerical parity between fold records and summary tables, run: python verify_reproducibility.py\n"
         "All 76 automated verification tests pass with 100% integrity, confirming zero discrepancy between reported and archived results."
     )
 
